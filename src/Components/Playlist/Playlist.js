@@ -8,7 +8,7 @@ class Playlist extends React.Component {
     return (
       <div className="Playlist">
         <defaultValue={'New Playlist'} />
-      /*  <!-- Add a TrackList component -->*/
+        <TrackList />
         <a class="Playlist-save">SAVE TO SPOTIFY</a>
       </div>
     );

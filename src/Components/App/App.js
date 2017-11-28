@@ -5,27 +5,24 @@ import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      "searchResults": [],
+    }
+  }
   render() {
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <!-- Add a SearchBar component -->
+            <SearchBar />
           <div className="App-playlist">
-            <!-- Add a SearchResults component -->
-            <!-- Add a Playlist component -->
+            <SearchResults searchResults={this.state.searchResults} />
+            <Playlist component />
           </div>
         </div>
       </div>
-    /*  <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div> */
     );
   }
 }
