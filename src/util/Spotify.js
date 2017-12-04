@@ -40,6 +40,59 @@ const Spotify {
   });
 },
 
+  savePlaylist(playlistName, trackUris) {
+    if (!playListName && !trackUris.length) {
+       return;
+     }
+      const accessToken = Spotify.getAccessToken();
+      const headers = {
+        Authorization: `Bearer ${accessToken}`
+      };
+
+      let user_id = '';
+      let playlistId = '';
+
+      return fetch(`https://api.spotify.com/v1/me`, {headers: headers}).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Request failed!');
+      }, networkError => {
+        console.log(networkError.message);
+      }).then(jsonResponse => {
+        userID = jsonResponse.id;
+
+        return fetch(`https://api.spotify.com/v1/users/${user_id}/playlists`, {
+          headers: headers,
+          method: 'POST',
+          body: JSON.stringify({name: playlistName})
+        }).then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Request failed!');
+        }, networkError => {
+          console.log(networkError.message);
+        }).then(jsonResponse => {
+          playlistID = jsonResponse.id;
+          return fetch(`https://api.spotify.com/v1/users/${user_id}/playlists/${playlist_id}/tracks`, {
+            headers: headers,
+            method: 'POST',
+            body: JSON.stringify({uris: trackUris})
+          }).then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Request failed!');
+          }, networkError => {
+            console.log(networkError.message);
+          }).then(jsonResponse => jsonResponse);
+        });
+      });
+      })
+    }
+  }
+
 
 
 
