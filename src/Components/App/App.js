@@ -52,11 +52,13 @@ class App extends Component {
         document.getElementById('Playlist-name').value = this.state.playlistName;
       });
     }
-
+  }
   search(searchTerm) {
-    Spotify.search(searchTerm).then(tracks => this.setState({searchResults: tracks});
-  })
-}
+    Spotify.search(searchTerm).then(results => {
+      this.setState({searchResults: results});
+  });
+ }
+
 
   render() {
     return (
