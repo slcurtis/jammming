@@ -1,5 +1,6 @@
 const clientId = 'a3edfc23f41c4640bc6e4beee4970563';
-const redirect_uri = 'http://localhost:3000/';
+//const redirect_uri = 'http://localhost:3000/';
+const redirect_uri = 'https://slcurtis.surge.sh/';
 
 let accessToken = '';
 
