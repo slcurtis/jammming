@@ -33,11 +33,11 @@ class App extends Component {
   removeTrack(track) {
     let tracks = this.state.playlistTracks;
     let newTracks = tracks.filter(trackIndex => trackIndex.id !== track.id);
-    this.setState({playlistTracks: this.state.playlistTracks});
+    this.setState({playlistTracks: newTracks});
   }
 
   updatePlaylistName(name) {
-    this.setState({playListName: name});
+    this.setState({playlistName: name});
   }
 
   savePlaylist() {
