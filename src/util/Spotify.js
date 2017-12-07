@@ -1,9 +1,9 @@
 const clientId = 'a3edfc23f41c4640bc6e4beee4970563';
-const redirect_uri = 'https://slcurtis.surge.sh/';
+const redirectUri = 'http://localhost:3000/callback';
 
-let accessToken = '';
+let accessToken;
 
-let Spotify = {
+const Spotify = {
   getAccessToken() {
     if (accessToken){
       return accessToken;
@@ -17,13 +17,15 @@ let Spotify = {
       const expiresIn = Number(expirationTime[1]);
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
+      return accessToken;
     } else {
-      window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&show_dialog=true&redirect_uri=${redirect_uri}`;
+      let accessURL = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&show_dialog=true&redirect_uri=${redirectUri}`;
+      window.location = accessURL;
     }
   },
 
   search(searchTerm) {
-    const accessToken = Spotify.getAccessToken();
+    let accessToken = Spotify.getAccessToken();
     const headers = {Authorization: `Bearer ${accessToken}`};
     return fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {headers: headers}).then(response => {
 
@@ -47,10 +49,10 @@ let Spotify = {
 },
 
   savePlaylist(playlistName, trackURIs) {
-    if (playlistName && trackURIs.length) {
+    if (!playlistName && !trackURIs.length) {
        return;
      }
-      const accessToken = Spotify.getAccessToken();
+      let accessToken = Spotify.getAccessToken();
       const headers = {
         Authorization: `Bearer ${accessToken}`
       };
