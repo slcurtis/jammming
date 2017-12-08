@@ -26,7 +26,7 @@ const Spotify = {
 
   search(searchTerm) {
     let accessToken = Spotify.getAccessToken();
-    const headers = {Authorization: `Bearer ${accessToken}`};
+    let headers = {Authorization: `Bearer ${accessToken}`};
     return fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {headers: headers}).then(response => {
 
       if (response.ok) {
@@ -48,57 +48,59 @@ const Spotify = {
   });
 },
 
-  savePlaylist(playlistName, trackURIs) {
+//create and save a playlist
+savePlaylist(playlistName, trackURIs) {
     if (!playlistName && !trackURIs.length) {
-       return;
+      return;
      }
-      let accessToken = Spotify.getAccessToken();
-      const headers = {
+      const accessToken = Spotify.getAccessToken();
+
+    //get user's ID
+      let headers = {
         Authorization: `Bearer ${accessToken}`
       };
-
       let userID = '';
-      let playlistID = '';
-
-      return fetch(`https://api.spotify.com/v1/me`, {headers: headers}).then(response => {
-        if (response.ok) {
+      fetch(`https://api.spotify.com/v1/me`, {headers: headers}).then(response => {
           return response.json();
-        }
-        throw new Error('Request failed!');
-      }, networkError => {
-        console.log(networkError.message);
-      }).then(jsonResponse => {
+        }).then(jsonResponse => {
+       if (!jsonResponse.id) {
+         return;
+       }
+
         userID = jsonResponse.id;
 
+      //create a playlist with a name and return its ID
+        let playlistID = '';
         return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
-          headers: headers,
-          method: 'POST',
-          body: JSON.stringify({name: playlistName})
-        }).then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error('Request failed!');
-        }, networkError => {
-          console.log(networkError.message);
-        }).then(jsonResponse => {
-          playlistID = jsonResponse.id;
-          return fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
-            headers: headers,
             method: 'POST',
-            body: JSON.stringify({uris: trackURIs})
-          }).then(response => {
-            if (response.ok) {
-              return response.json();
+            headers: headers,
+            body: JSON.stringify({name: playlistName})
+            }).then(response => {
+                  if (response.ok) {
+                    return response.json();
+                  }
+                  //throw new Error('Request failed!');
+                //}, networkError => {
+                //  console.log(networkError.message);
+                }).then(jsonResponse => {
+                //  playlistID = jsonResponse.id;
+                  return fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({uris: trackURIs})
+                  }).then(response => {
+                    if (response.ok) {
+                      return response.json();
+                    }
+                  //  throw new Error('Request failed!');
+                //  }, networkError => {
+                //    console.log(networkError.message);
+                  }).then(jsonResponse => jsonResponse);
+                });
+              });
             }
-            throw new Error('Request failed!');
-          }, networkError => {
-            console.log(networkError.message);
-          }).then(jsonResponse => jsonResponse);
-        });
-      });
-    }
-  }
+          }
+
 
 
 
