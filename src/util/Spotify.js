@@ -70,8 +70,6 @@ const Spotify = {
 
       //create a playlist with a name and return its ID
       let playlistID = '';
-      //  console.log(playlistName);
-      //  console.log(JSON.stringify({name: playlistName}));
       return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
         method: 'POST',
         headers: headers,
